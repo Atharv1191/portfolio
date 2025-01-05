@@ -1,8 +1,9 @@
 import { assets } from "@/assets/assets";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion"; // Make sure motion is imported
 
-const Navbar = () => {
+const Navbar = ({ isDarkMode, setIsDarkMode }) => {
   const [isScroll, setIsScroll] = useState(false);
   const sideMenu = useRef();
 
@@ -38,109 +39,104 @@ const Navbar = () => {
   return (
     <>
       {/* Navbar */}
-      <nav
-        className={`w-full fixed top-0 left-0 px-5 lg:px-8 xl:px-[8%] py-4 flex items-center justify-between z-50 transition-all duration-300 ${
-          isScroll
-            ? "bg-white bg-opacity-50 backdrop-blur-lg shadow-sm"
-            : "bg-transparent"
-        }`}
+      <motion.nav
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className={`w-full fixed top-0 left-0 px-5 lg:px-8 xl:px-[8%] py-4 flex items-center justify-between z-50 transition-all duration-300 
+          ${isScroll
+            ? "bg-white dark:bg-darkTheme bg-opacity-50 backdrop-blur-lg shadow-sm"
+            : "bg-transparent dark:bg-darkTheme dark:shadow-white/20"
+          }`}
       >
         {/* Logo */}
         <a href="#top">
-          <Image src={assets.logo} alt="Logo" className="w-28 cursor-pointer mr-14" />
+          <Image
+            src={isDarkMode ? assets.logo_dark : assets.logo}
+            alt="Logo"
+            className="w-28 cursor-pointer mr-14"
+          />
         </a>
 
         {/* Desktop Menu */}
-        <ul
-          className={`hidden md:flex items-center gap-6 lg:gap-8 rounded-full px-12 py-3 ${
-            isScroll ? "" : "bg-white bg-opacity-70 shadow-md"
-          }`}
+        <motion.ul
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className={`hidden md:flex items-center gap-6 lg:gap-8 rounded-full px-12 py-3 
+            ${isScroll 
+              ? "dark:bg-darkTheme dark:shadow-white/20"
+              : "bg-white bg-opacity-70 shadow-md dark:border dark:border-white/50 dark:bg-darkTheme"
+            }`}
         >
-          <li>
-            <a className="font-[Ovo]" href="#top">
-              Home
-            </a>
-          </li>
-          <li>
-            <a className="font-[Ovo]" href="#about">
-              About Me
-            </a>
-          </li>
-          <li>
-            <a className="font-[Ovo]" href="#services">
-              Services
-            </a>
-          </li>
-          <li>
-            <a className="font-[Ovo]" href="#work">
-              My Work
-            </a>
-          </li>
-          <li>
-            <a className="font-[Ovo]" href="#contact">
-              Contact Me
-            </a>
-          </li>
-        </ul>
+          {['Home', 'About Me', 'Services', 'My Work', 'Contact Me'].map((item, index) => (
+            <li key={index}>
+              <a className="font-[Ovo] dark:text-white" href={`#${item.replace(/\s+/g, '').toLowerCase()}`} aria-label={item}>{item}</a>
+            </li>
+          ))}
+        </motion.ul>
 
         {/* Right-side icons and buttons */}
         <div className="flex items-center gap-4">
           {/* Theme Toggle */}
-          <button>
-            <Image src={assets.moon_icon} alt="Theme Toggle" className="w-6" />
+          <button onClick={() => setIsDarkMode(prev => !prev)} aria-label="Toggle Dark Mode">
+            <Image 
+              src={isDarkMode ? assets.sun_icon : assets.moon_icon} 
+              alt="Theme Toggle" 
+              className="w-6" 
+            />
           </button>
 
           {/* Contact Button */}
           <a
-            className="hidden lg:flex items-center gap-3 px-10 py-2.5 border border-gray-500 rounded-full ml-4 font-[Ovo]"
+            className="hidden lg:flex items-center gap-3 px-10 py-2.5 border rounded-full ml-4 font-[Ovo] 
+              border-gray-500 dark:border-white/50 dark:text-white"
             href="#contact"
+            aria-label="Go to Contact Section"
           >
             Contact
-            <Image src={assets.arrow_icon} alt="Arrow Icon" className="w-3" />
+            <Image 
+              src={isDarkMode ? assets.arrow_icon_dark : assets.arrow_icon} 
+              alt="Arrow Icon" 
+              className="w-3" 
+            />
           </a>
 
           {/* Mobile Menu Button */}
-          <button className="block md:hidden ml-3" onClick={openMenu}>
-            <Image src={assets.menu_black} alt="Menu Icon" className="w-6" />
+          <button className="block md:hidden ml-3" onClick={openMenu} aria-label="Open Mobile Menu">
+            <Image 
+              src={isDarkMode ? assets.menu_white : assets.menu_black} 
+              alt="Menu Icon" 
+              className="w-6" 
+            />
           </button>
         </div>
 
         {/* Mobile Menu */}
-        <ul
+        <motion.ul
           ref={sideMenu}
-          className="flex md:hidden flex-col gap-4 py-20 px-10 fixed top-0 right-0 bottom-0 w-64 h-screen bg-rose-50 transform translate-x-full transition-transform duration-500 z-50 shadow-lg"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="flex md:hidden flex-col gap-4 py-20 px-10 fixed top-0 right-0 bottom-0 w-64 h-screen 
+            bg-rose-50 dark:bg-darkTheme transform translate-x-full transition-transform duration-500 z-50 shadow-lg"
+          style={{ willChange: "transform" }}
         >
           {/* Close Button */}
           <div onClick={closeMenu} className="absolute right-6 top-6 cursor-pointer">
-            <Image src={assets.close_black} alt="Close Icon" className="w-5" />
+            <Image 
+              src={isDarkMode ? assets.close_white : assets.close_black} 
+              alt="Close Icon" 
+              className="w-5" 
+            />
           </div>
-          <li>
-            <a onClick={closeMenu} className="font-[Ovo]" href="#top">
-              Home
-            </a>
-          </li>
-          <li>
-            <a onClick={closeMenu} className="font-[Ovo]" href="#about">
-              About Me
-            </a>
-          </li>
-          <li>
-            <a onClick={closeMenu} className="font-[Ovo]" href="#services">
-              Services
-            </a>
-          </li>
-          <li>
-            <a onClick={closeMenu} className="font-[Ovo]" href="#work">
-              My Work
-            </a>
-          </li>
-          <li>
-            <a onClick={closeMenu} className="font-[Ovo]" href="#contact">
-              Contact Me
-            </a>
-          </li>
-        </ul>
-      </nav>
+          {['Home', 'About Me', 'Services', 'My Work', 'Contact Me'].map((item, index) => (
+            <li key={index}>
+              <a onClick={closeMenu} className="font-[Ovo] dark:text-white" href={`#${item.replace(/\s+/g, '').toLowerCase()}`} aria-label={item}>{item}</a>
+            </li>
+          ))}
+        </motion.ul>
+      </motion.nav>
     </>
   );
 };
