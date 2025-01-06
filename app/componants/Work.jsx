@@ -1,17 +1,18 @@
 import { assets, workData } from "@/assets/assets";
 import Image from "next/image";
 import React from "react";
-import { motion } from "framer-motion"; // Use framer-motion import correctly
+import { motion } from "framer-motion";
 
 const Work = ({ isDarkMode }) => {
   return (
     <motion.div
       initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }} // Keep whileInView on motion element
+      whileInView={{ opacity: 1 }}
       transition={{ duration: 1 }}
       id="work"
       className="w-full px-[12%] py-10 scroll-mt-20"
     >
+      {/* Header Section */}
       <motion.h4
         initial={{ y: -20, opacity: 0 }}
         whileInView={{ y: 0, opacity: 1 }}
@@ -37,6 +38,7 @@ const Work = ({ isDarkMode }) => {
         Welcome to my web-development portfolio! Explore a collection of projects showcasing my expertise in front-end development.
       </motion.p>
 
+      {/* Portfolio Grid Section */}
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
@@ -48,19 +50,25 @@ const Work = ({ isDarkMode }) => {
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.3 }}
             key={index}
-            className="relative rounded-lg overflow-hidden shadow-lg cursor-pointer group"
-            style={{
-              backgroundImage: `url(${project.bgImage})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
+            className="relative rounded-lg overflow-hidden shadow-lg cursor-pointer group w-full h-[300px]" // Adjust height
           >
+            {/* Background Image */}
+            <Image
+              src={project.bgImage}
+              alt={project.title}
+              layout="fill"
+              objectFit="cover"
+              unoptimized
+              className="absolute inset-0"
+            />
+
+            {/* Overlay and Info */}
             <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-end p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <h2 className="text-white text-lg font-bold">{project.title}</h2>
               <p className="text-white text-sm">{project.description}</p>
               <div className="mt-4 flex items-center">
                 <Image
-                  src={assets.send_icon}
+                  src={assets.send_icon} // Ensure this resolves to a valid path
                   alt="Send Icon"
                   width={20}
                   height={20}
@@ -72,6 +80,7 @@ const Work = ({ isDarkMode }) => {
         ))}
       </motion.div>
 
+      {/* Show More Button */}
       <motion.a
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
@@ -83,7 +92,8 @@ const Work = ({ isDarkMode }) => {
         <Image
           src={isDarkMode ? assets.right_arrow_bold_dark : assets.right_arrow_bold}
           alt="Right Arrow Icon"
-          className="w-4"
+          width={16}
+          height={16}
         />
       </motion.a>
     </motion.div>
